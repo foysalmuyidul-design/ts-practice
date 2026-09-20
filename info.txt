@@ -1,0 +1,63 @@
+Step 1: Initialize the Project in CMDRun these commands in your command prompt to create your folders, initialize your package manager, and install TypeScript:
+
+# 1. Create and enter your project folder
+mkdir my-ts-project
+cd my-ts-project
+
+# 2. Create the folders you planned for
+mkdir src dist
+
+# 3. Initialize package.json (creates default settings)
+npm init -y
+
+# 4. Install TypeScript as a development tool
+npm install -D typescript @types/node
+
+# 5. Generate your tsconfig.json file
+npx tsc --init
+
+
+Step 2: The Top Settings to Tweak ImmediatelyOpen your newly generated tsconfig.json file. It will look like a giant wall of text because of all the helpful comments. Use your code editor's search tool (Ctrl + F) to find and change only these specific lines:Look for "target": "es2016" → Change it to "target": "es2022" (or higher) to use modern JavaScript.Look for // "rootDir": "./" → Remove the // and change it to "rootDir": "./src".Look for // "outDir": "./" → Remove the // and change it to "outDir": "./dist".Finally, scroll all the way to the very bottom of the file (outside the main curly brace block of compilerOptions) and paste these two lines to keep your compilation scope clean:
+
+
+  }, // This is the closing brace for compilerOptions
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+
+
+Step 3: Add Convenience ScriptsOpen your package.json file. Find the "scripts" section and update it to look like this so you don't have to keep typing long paths into CMD:
+
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "watch": "tsc --watch"
+}
+
+
+Step 4: Test it out!Create a file named index.ts inside your src folder.Add a simple test line: console.log("TypeScript works!");In your CMD window, run:
+
+npm run build
+
+
+Look at your project sidebar—you will see a brand new, beautifully compiled index.js file living directly inside your dist folder. You can run it instantly using npm start.Would you like to add a tool like ts-node-dev or nodemon next?These tools can automatically recompile AND restart your app every single time you hit save, giving you a seamless coding workflow without touching the terminal again.
+
+Let’s set up ts-node-dev. It combines the speed of compilation with an automatic app restarter, making it the absolute best tool for a modern TypeScript development workflow.Unlike nodemon + ts-node (which can feel sluggish because it restarts the entire TypeScript compiler process on every save), ts-node-dev shares a single compilation process across restarts. It is incredibly fast.Here is how to get it running in your new project:Step 1: Install the ToolRun this command in your CMD terminal to add it as a development tool:
+
+npm install -D ts-node-dev
+
+
+Step 2: Update Your package.json ScriptsOpen your package.json file, look for the "scripts" section, and add a new dev command. It should look like this:
+
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+}
+
+
+What do those flags mean?--respawn: Keeps watching the files for changes even if your script crashes due to an error.--transpile-only: Tells the tool to skip full type-checking during development restarts. This is what makes it blazing fast. (Don't worry, your code editor will still show you squiggly red lines if you make a syntax mistake, and npm run build will still do a full strict check later!).Step 3: Run Your New Development ServerNow, instead of manually compiling or running separate watch windows, simply type:
+
+npm run dev
+
+
