@@ -61,3 +61,134 @@ What do those flags mean?--respawn: Keeps watching the files for changes even if
 npm run dev
 
 
+PS E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice> npm run dev
+>> 
+
+> ts-practice@1.0.0 dev
+> ts-node-dev --respawn --transpile-only src/index.ts
+
+[INFO] 04:58:46 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 7.0.2)
+E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node\dist\configuration.js:91
+    const { fileExists = ts.sys.fileExists, readFile = ts.sys.readFile, skipProject = index_1.DEFAULTS.skipProject, project = index_1.DEFAULTS.project, tsTrace = index_1.DEFAULTS.tsTrace, } = rawApiOptions;
+                                ^
+
+TypeError: Cannot read properties of undefined (reading 'fileExists')
+    at readConfig (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node\dist\configuration.js:91:33)
+    at findAndReadConfig (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node\dist\configuration.js:50:84)
+    at create (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node\dist\index.js:146:69)
+    at Object.register (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node\dist\index.js:127:19)
+    at registerTsNode (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node-dev\lib\compiler.js:174:16)
+    at Object.init (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node-dev\lib\compiler.js:121:9)
+    at exports.runDev (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node-dev\lib\index.js:256:14)
+    at Object.<anonymous> (E:\foysal\New folder\foysal\New folder (3)\New folder\ts-practice\node_modules\ts-node-dev\lib\bin.js:136:4)
+    at Module._compile (node:internal/modules/cjs/loader:1871:14)
+    at Object.<anonymous> (node:internal/modules/cjs/loader:2002:10)
+
+Node.js v24.18.0
+
+This error happens because you are using TypeScript 7.0.2.TypeScript 7 introduced a major internal engine rewrite (rebuilding parts of the compiler in Go for massive speed increases). Because of this, it completely removed the old programmatic JavaScript APIs that older tools like ts-node and ts-node-dev depended on. They simply cannot read TypeScript 7's new structures, resulting in that TypeError: Cannot read properties of undefined (reading 'fileExists') crash.You can fix this completely using Option 1 (The Modern Way), which swaps out the outdated watcher for a modern tool that natively supports your environment.
+
+Option 1: Switch to tsx (Recommended)tsx is a lightning-fast TypeScript execute/watch tool powered by esbuild. It completely replaces ts-node-dev, requires zero configuration, and works seamlessly with modern versions of Node.js and TypeScript.Uninstall ts-node-dev
+
+npm uninstall ts-node-dev
+
+
+Install tsx
+
+npm install -D tsx
+
+
+Update your package.json script:Change your "dev" script to use tsx watch:
+
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "dev": "tsx watch src/index.ts"
+}
+
+
+Run it
+
+npm run dev
+
+
+if i make another ts file like problem1.ts then how to run it
+
+
+To run a specific file like problem1.ts inside your src folder, you have two quick ways to do it depending on whether you want it to watch for changes or just run once.Option 1: Run it once immediatelyIf you installed tsx from the previous step, you can run any individual file directly via your terminal using npx:
+
+npx tsx src/problem1.ts
+
+Option 2: Run it with "Watch Mode" (Restarts on save)If you are actively working on problem1.ts and want it to re-run every time you save, add the watch flag:
+
+npx tsx watch src/problem1.ts
+
+Pro-Tip: Make it a quick npm shortcutIf you plan on working on multiple problem files (like problem1.ts, problem2.ts, etc.) and don't want to type out the full paths every time, you can add a flexible shortcut script to your package.json:Open package.json and add a script named "file":
+
+"scripts": {
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "dev": "tsx watch src/index.ts",
+  "file": "tsx watch"
+}
+
+Now, you can pass the file path dynamically directly through npm run like this
+
+npm run file src/problem1.ts
+
+(Note: If you are using Git Bash or standard CMD, you might need to use a double dash like npm run file -- src/problem1.ts to pass the argument safely).Are you setting up this project to solve coding challenges (like LeetCode or Advent of Code) where you will have many separate problem files?If so, I can show you a clean way to organize your folder structure so your files don't clutter up a single directory!
+
+npx tsx watch src/problem1.ts no change in dist
+
+That is completely normal! tsx watch runs your TypeScript code directly in memory for fast development. It deliberately does not output any JavaScript files to your dist folder.Think of it like a live preview server—it executes your logic instantly without wasting time writing files to your hard drive on every single save.How to get files into distWhen you are ready to generate the actual compiled JavaScript files inside your dist folder, you need to run your build script:
+
+npm run build
+
+
+(This triggers the official TypeScript compiler tsc, which reads your tsconfig.json and outputs the permanent files into dist).
+
+The Best Workflow for Coding PracticeDuring development: Use npx tsx watch src/problem1.ts. Work on your code, save, and look at your terminal to instantly see your console logs or test results.When you finish/deploy: Run npm run build once to compile everything neatly into the dist folder.Did the npm run build command successfully generate your problem1.js file inside the dist folder?
+
+
+
+how to upload it in githubTo upload your TypeScript project to GitHub, you need to initialize a Git repository, make sure you don't accidentally upload your heavy node_modules folder, and then push it to GitHub.Here is the exact step-by-step process using your command prompt:Step 1: Create a .gitignore file (CRITICAL)Before doing anything with Git, you must tell it to ignore folders that shouldn't be tracked (like node_modules, which can be reinstalled anytime, and your generated dist folder).In the root of your project folder (ts-practice), create a new file named .gitignore (make sure it starts with a dot).Open the file and paste these lines inside it
+
+
+node_modules/
+dist/
+.env
+
+Step 2: Initialize Git and Commit Your CodeRun these commands in your terminal to prepare your project locally:
+
+# 1. Initialize an empty local Git repository
+git init
+
+# 2. Stage all your project files (it will ignore node_modules and dist automatically)
+git add .
+
+# 3. Create your first save point (commit)
+git commit -m "Initial commit: setup TS project with src folder"
+
+# 4. Rename your main branch to "main" (the GitHub default)
+git branch -M main
+
+Step 3: Create a Repository on GitHubGo to github.com and log into your account.Click the "+" icon in the top-right corner and select New repository.Give your repository a name (e.g., ts-practice).Leave everything else blank (Do NOT check the boxes for adding a README, .gitignore, or license, since we already made our own).Click Create repository.Step 4: Link and Push Your CodeGitHub will show you a page with a few lines of code under the heading "…or push an existing repository from the command line".Copy and paste those exact two commands into your command prompt. They will look similar to this:
+
+# Link your local project to your online GitHub repository
+git remote add origin https://github.com
+
+# Push your code to GitHub
+git push -u origin main
+
+Refresh your GitHub browser page, and you will see your clean src folder, package.json, and tsconfig.json uploaded safely online!Did you run into any authentication errors (like a login or permission prompt) while trying to push the code?If you don't have Git installed or configured with your name/email yet, let me know and I can show you how to quickly set that up!
+
+change in 1 file and m beside it's nameThat "M" beside your file name is a visual status indicator from Git (visible in your code editor, like VS Code).It stands for Modified.It means Git has successfully tracked that file before, and it notice that you have made new changes to it since your last commit.How to update GitHub with your new changeWhenever you see that "M" and you are ready to upload your updated code to GitHub, run these three quick commands in your terminal:
+
+# 1. Stage the modified file (updates the file in Git's staging area)
+git add .
+
+# 2. Lock in your new changes with a descriptive message
+git commit -m "Update problem1 file with new solution"
+
+# 3. Push the new commit to GitHub
+git push origin main
