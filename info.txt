@@ -209,3 +209,5 @@ Use code with caution.To run a specific practice file:bashnpm run file src/probl
 
 To compile the files for production and create the dist folder:bashnpm run build
 npm start
+
+how to update files in anotrher pcTo update the files on a second computer so they match your latest GitHub changes, you do not need to delete and re-clone the repository. Instead, you just use Git to pull the new data down.Follow these steps on the second computer:Step 1: Download the Latest ChangesOpen your terminal inside your project folder (ts-practice) on the second computer and run:bashgit pull origin main
