@@ -192,3 +192,20 @@ git commit -m "Update problem1 file with new solution"
 
 # 3. Push the new commit to GitHub
 git push origin main
+
+
+how to download from git and run itTo download a TypeScript project from GitHub and run it on another computer (or if you want to test your own repository cleanly), follow these steps in your terminal:Step 1: Download (Clone) the RepositoryGo to your GitHub repository page, click the green Code button, and copy the repository URL. Then open CMD or PowerShell and run:
+
+# Clone the repository to your computer
+git clone https://github.com
+
+# Enter the project folder
+cd ts-practice
+
+
+Step 2: Install the Dependencies (Crucial)Because we added node_modules to the .gitignore file, the actual external tools (like TypeScript and tsx) were not uploaded to GitHub. You must download them fresh by running:bashnpm install
+Use code with caution.(This looks at your package.json file and automatically installs every single required tool back into your local project environment).Step 3: Run the CodeNow that your environment is restored, you can use the built-in shortcuts we configured in your package.json to start the app:To run the live development environment (restarts on save):bashnpm run dev
+Use code with caution.To run a specific practice file:bashnpm run file src/problem1.ts
+
+To compile the files for production and create the dist folder:bashnpm run build
+npm start

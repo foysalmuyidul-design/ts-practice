@@ -12,7 +12,7 @@ const getAgeRatingAccess = (age:number):string => {
     return "M (Mature)"
 
 }
-console.log(getAgeRatingAccess(5))
+console.log(getAgeRatingAccess(25))
 console.log(getAgeRatingAccess(10))
 console.log(getAgeRatingAccess(15))
 console.log(getAgeRatingAccess(18))
